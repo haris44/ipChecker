@@ -15,7 +15,7 @@ class UserService extends Controller{
 
   def insert = Action (parse.json) {
     request => val result = UserDao.insert(request.body)
-      Ok(result)
+      Ok("lol")
   }
 
 

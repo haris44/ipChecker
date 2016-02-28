@@ -15,6 +15,6 @@ GET     /user                      controllers.UserService.get(iduser : Int ?= -
 POST    /user                      controllers.UserService.insert
 
 #Ip
-GET     /ip/:id                    controllers.IpService.get(ip : Int ?= -1)
+GET     /ip                        controllers.IpService.get(ip : Int ?= -1)
 GET     /ip                        controllers.IpService.getAll
 POST    /ip                        controllers.IpService.insert

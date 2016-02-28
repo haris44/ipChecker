@@ -5,6 +5,8 @@ import models.{Ip, User}
 
 import play.api.db.DB
 import play.api.Play.current
+import anorm.SqlParser.str
+import play.api.libs.json
 import play.api.libs.json.{Json, JsValue}
 
 object UserDao{
@@ -21,20 +23,23 @@ object UserDao{
     SQL("SELECT * FROM user WHERE nom = {nom} AND prenom = {prenom}").on('prenom -> prenom, 'nom -> nom).as(User.userParser*)
   }
 
-  def insert (value : JsValue) = DB.withConnection { implicit c =>
-    val existUser = getByName((value \ "nom").as[String], (value \ "prenom").as[String]).asInstanceOf[User]
-    if(existUser.nom != (value \ "nom").as[String]) {
-          Json.toJson(existUser)
+
+  def insert (value : JsValue) : Long = DB.withConnection { implicit c =>
+    val existUser = getByName((value \ "nom").as[String].toLowerCase(), (value \ "prenom").as[String].toLowerCase())
+    var response : Long = 0
+    if(existUser.nonEmpty) {
+      response = existUser(0).iduser;
     }
     else {
-        val response = SQL("INSERT INTO user (titre, nom, prenom, idgroupe) VALUES ({titre}, {nom}, {prenom}, {idgroupe})").on(
-          'titre -> (value \ "titre").as[String],
-          'nom -> (value \ "nom").as[String].toLowerCase(),
-          'prenom ->(value \ "prenom").as[String].toLowerCase(),
-          'idgroupe ->(value \ "idgroupe").as[Int]
-        ).executeInsert() ; Json.toJson(response)
-      }
-
+      val rep: Option[Long]  = SQL("INSERT INTO user (titre, nom, prenom, idgroupe) VALUES ({titre}, {nom}, {prenom}, {idgroupe})").on(
+        'titre -> 0,
+        'nom -> (value \ "nom").as[String].toLowerCase(),
+        'prenom ->(value \ "prenom").as[String].toLowerCase(),
+        'idgroupe ->(value \ "idgroupe").as[Int]
+      ).executeInsert();
+    response = rep.get;
+    }
+    response
   }
 
 }

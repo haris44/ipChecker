@@ -9,7 +9,7 @@ import play.api.libs.json.{Writes, Json}
   * Created by Alex on 17/02/2016.
   */
 
-case class Groupe(idgroupe : Int,  nom : String , année : String,  groupeid : String)
+case class Groupe(idgroupe : Int,  nom : String , annee : Int)
 
 object Groupe{
 
@@ -18,10 +18,9 @@ object Groupe{
   val groupeParser = {
     get[Int]("idgroupe") ~
       get[String]("nom") ~
-      get[String]("année") ~
-      get[String]("groupeid") map {
-      case idgroupe~nom~année~groupeid =>
-        Groupe(idgroupe,nom,année,groupeid)
+      get[Int]("annee")  map {
+      case idgroupe~nom~année =>
+        Groupe(idgroupe,nom,année)
     }
   }
 

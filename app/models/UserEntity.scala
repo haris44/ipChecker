@@ -9,7 +9,7 @@ import play.api.libs.json.{Writes, Json}
   * Created by Alex on 17/02/2016.
   */
 
-case class User (iduser : Int,  nom : String , prenom : String,  titre : String, idgroupe : Int)
+case class User (var iduser : Int,  nom : String , prenom : String,  titre : String, idgroupe : Int)
 
 object User{
 

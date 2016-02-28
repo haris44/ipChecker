@@ -18,10 +18,10 @@ object GroupeDao{
   }
 
   def insert (value : JsValue) = DB.withConnection { implicit c =>
-    val response = SQL("INSERT INTO groupe (nom, annee, right) VALUES ({nom}, {annee}, {right})").on(
+    val response = SQL("INSERT INTO groupe (nom, annee, rights) VALUES ({nom}, {annee}, {rights})").on(
       'nom -> (value \ "nom").as[String],
       'annee -> (value \ "annee").as[Int],
-      'right -> (value \ "right").as[Int]
+      'rights -> (value \ "right").as[Int]
     ).executeInsert() ; Json.toJson(response)
   }
 
